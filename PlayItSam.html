@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<style type="text/css"> 
+ #filecontents { 
+  border:double; 
+  overflow-y:scroll; 
+  height:400px; 
+} 
+</style>
+<script language="javascript">
+  //global vars
+  var playlist = [];
+  var playlistIndex = -1;
+
+  //initialize event handlers on window load
+  window.onload = function () 
+  { 
+    //Check the support for the File API support 
+    if (window.File && window.FileReader && window.FileList && window.Blob) 
+    {
+      var fileSelected = document.getElementById('txtfiletoread');
+      fileSelected.addEventListener('change', function (e) 
+      { 
+        loadPlaylist( fileSelected.files[0] );
+      }, false);
+
+      var PISplayer = document.getElementById("PlayItSam");
+      PISplayer.addEventListener("ended", function (e)
+      {
+        playlistIndex = playlistIndex % playlist.length +1; // go to next song when song ends
+        //alert("Song ended, playing " + playlistIndex);
+        playSong();
+      }, false);
+    } 
+    else 
+    { 
+      alert("Files are not supported"); 
+    } 
+  }
+
+  //randomly shuffle the playlist
+  function randomizePlaylist()
+  {
+    var reordered = [];
+    var numsongs = playlist.length;
+    while( playlist.length > 0 )
+    {
+      num = Math.floor((Math.random() * playlist.length) + 1);
+      reordered.push( playlist[num] );
+      playlist.splice(num,1);
+    }
+    playlist = reordered;
+  }
+
+  //given a file (plain text in m3u format), load each line as a song file
+  function loadPlaylist(file)
+  {
+    var fileReader = new FileReader(); 
+    fileReader.onload = function (e) 
+    { 
+      var fileContents = document.getElementById('filecontents');
+      var allSongs = fileReader.result;
+      var eachLine = allSongs.match(/[^\r\n]+/g);
+      for(index in eachLine)
+      {
+        var songname = new String(eachLine[index]);
+
+        if( !songname.match(/^#/) ) //any non-comment line
+        {
+          playlist.push( songname );
+          fileContents.innerText += songname + "\n";
+        }
+      }
+      randomizePlaylist();
+      playlistIndex = 0;
+      playSong();
+    } 
+    fileReader.readAsText(file);
+  }
+
+  //load song from filename into PlayItSam player
+  function loadAndPlaySong(filesong)
+  {
+    //alert("Playing " + filesong);
+    var PISplayer = document.getElementById("PlayItSam");
+    PISplayer.src=filesong;
+    PISplayer.load();
+    PISplayer.play();
+  }
+
+  //safely play the current song
+  function playSong()
+  {
+    if( playlistIndex >=0  && playlistIndex < playlist.length )
+      loadAndPlaySong(playlist[playlistIndex]);  
+  }
+</script>
+<body>
+
+  Please Select text file of which contents are to be read: 
+  <input type="file" id="txtfiletoread" />
+  <!--
+  <div>The File Contents are as below:</div> 
+  <div id="filecontents"></div>
+  /-->
+  <audio id="PlayItSam" autoplay="true" controls>
+    <source id="audioSource" src="" type="audio/mpeg">
+      Your browser does not support the audio element.
+  </audio>
+
+</body>
+</html>
