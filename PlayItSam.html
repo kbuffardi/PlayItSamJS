@@ -1,11 +1,5 @@
 <!DOCTYPE html>
 <html>
-<style type="text/css"> 
- #filecontents { 
-  border:double; 
-  overflow-y:scroll; 
-  height:400px; 
-} 
 </style>
 <script language="javascript">
   //global vars
@@ -40,15 +34,12 @@
   //randomly shuffle the playlist
   function randomizePlaylist()
   {
-    var reordered = [];
     var numsongs = playlist.length;
-    while( playlist.length > 0 )
+    for(var i = 0; i < numsongs; i++ )
     {
-      num = Math.floor((Math.random() * playlist.length) + 1);
-      reordered.push( playlist[num] );
-      playlist.splice(num,1);
+      var num = Math.floor((Math.random() * playlist.length));
+      playlist.push( playlist.splice(num,1) ); //remove random item and move it to the end
     }
-    playlist = reordered;
   }
 
   //given a file (plain text in m3u format), load each line as a song file
@@ -57,7 +48,6 @@
     var fileReader = new FileReader(); 
     fileReader.onload = function (e) 
     { 
-      var fileContents = document.getElementById('filecontents');
       var allSongs = fileReader.result;
       var eachLine = allSongs.match(/[^\r\n]+/g);
       for(index in eachLine)
@@ -97,7 +87,7 @@
 
   Please Select text file of which contents are to be read: 
   <input type="file" id="txtfiletoread" />
-  <audio id="PlayItSam" autoplay="true" controls>
+  <audio id="PlayItSam" autoplay="true">
     <source id="audioSource" src="" type="audio/mpeg">
       Your browser does not support the audio element.
   </audio>
