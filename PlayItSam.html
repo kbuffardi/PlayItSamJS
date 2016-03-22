@@ -21,14 +21,45 @@
       var PISplayer = document.getElementById("PlayItSam");
       PISplayer.addEventListener("ended", function (e)
       {
-        playlistIndex = playlistIndex % playlist.length +1; // go to next song when song ends
+        skip();
+        playSong();
+      }, false);
+
+      PISplayer.addEventListener("abort", function (e)
+      {
+        skip();
+        playSong();
+      }, false);
+
+      PISplayer.addEventListener("error", function (e)
+      {
+        skip();
+        playSong();
+      }, false);
+
+      PISplayer.addEventListener("stalled", function (e)
+      {
+        skip();
+        playSong();
+      }, false);
+
+      PISplayer.addEventListener("suspend", function (e)
+      {
+        skip();
         playSong();
       }, false);
     } 
     else 
     { 
-      alert("Files are not supported"); 
+      alert("Files are not supported in your browser"); 
     } 
+  }
+
+
+  //progress to next song, or loop back to beginning
+  function skip()
+  {
+    playlistIndex = playlistIndex % playlist.length +1; // go to next song when song ends
   }
 
   //randomly shuffle the playlist
@@ -85,7 +116,7 @@
 </script>
 <body>
 
-  Please Select text file of which contents are to be read: 
+  Load m3u Playlist: 
   <input type="file" id="txtfiletoread" />
   <audio id="PlayItSam" autoplay="true">
     <source id="audioSource" src="" type="audio/mpeg">
