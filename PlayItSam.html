@@ -28,7 +28,6 @@
       PISplayer.addEventListener("ended", function (e)
       {
         playlistIndex = playlistIndex % playlist.length +1; // go to next song when song ends
-        //alert("Song ended, playing " + playlistIndex);
         playSong();
       }, false);
     } 
@@ -68,7 +67,6 @@
         if( !songname.match(/^#/) ) //any non-comment line
         {
           playlist.push( songname );
-          fileContents.innerText += songname + "\n";
         }
       }
       randomizePlaylist();
@@ -99,10 +97,6 @@
 
   Please Select text file of which contents are to be read: 
   <input type="file" id="txtfiletoread" />
-  <!--
-  <div>The File Contents are as below:</div> 
-  <div id="filecontents"></div>
-  /-->
   <audio id="PlayItSam" autoplay="true" controls>
     <source id="audioSource" src="" type="audio/mpeg">
       Your browser does not support the audio element.
