@@ -1,16 +1,29 @@
 //global vars
-var playlist = [];
-var playlistIndex = -1;
+var playlist;
+var playlistIndex;
+var playRandom;
 
 //initialize event handlers on window load
 window.onload = function () 
 { 
+  //initialize global vars
+  playlist = [];
+  playlistIndex = -1;
+  playRandom = false;
+
   //Check the support for the File API support 
   if (window.File && window.FileReader && window.FileList && window.Blob) 
   {
-    var fileSelected = document.getElementById('txtfiletoread');
+    var fileSelected = document.getElementById('txtFileToRead');
     fileSelected.addEventListener('change', function (e) 
     { 
+      loadPlaylist( fileSelected.files[0] );
+    }, false);
+
+    var chkbxRandom = document.getElementById('randomize');
+    chkbxRandom.addEventListener('change', function (e) 
+    { 
+      playRandom = chkbxRandom.checked;
       loadPlaylist( fileSelected.files[0] );
     }, false);
 
@@ -86,7 +99,7 @@ function loadPlaylist(file)
         playlist.push( songname );
       }
     }
-    randomizePlaylist();
+    playRandom ? randomizePlaylist();
     playlistIndex = 0;
     playSong();
   } 
