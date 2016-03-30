@@ -122,7 +122,7 @@ function loadSong()
   {
     var filesong = playlist[playlistIndex];
     var PISplayer = document.getElementById("PlayItSam");
-    log.innerHTML += "<br/>#" + playlistIndex + " " + filesong + "<br/>";
+    log.innerHTML += "<br/>#" + (playlistIndex+1) + " " + filesong + "<br/>";
     PISplayer.src=filesong;
     PISplayer.load();
   }
