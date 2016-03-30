@@ -33,7 +33,7 @@ window.onload = function ()
     var PISplayer = document.getElementById("PlayItSam");
     PISplayer.addEventListener("ended", function (e)
     {
-      log.innerHTML += "...ENDED";
+      //log.innerHTML += "...ENDED";
       skip();
       loadSong();
     }, false);
@@ -75,8 +75,7 @@ window.onload = function ()
 //progress to next song, or loop back to beginning
 function skip()
 {
-  playlistIndex = playlistIndex % playlist.length +1; // go to next song when song ends
-  log.innerHTML += "<br/>#" + playlistIndex;
+  playlistIndex = ++playlistIndex % playlist.length; // go to next song when song ends
 }
 
 //randomly shuffle the playlist
@@ -107,10 +106,9 @@ function loadPlaylist(file)
         playlist.push( songname );
       }
     }
-    log.innerHTML += "<br/>Loaded " + playlist.length + " songs: ";
+    log.innerHTML += "<br/>Loaded " + playlist.length + " songs. ";
     if(playRandom)
       randomizePlaylist();
-    log.innerHTML += "<br/>" + playlist.toString();
     playlistIndex = 0;
     loadSong();
   } 
@@ -120,12 +118,11 @@ function loadPlaylist(file)
 //load song from playlist into PlayItSam player
 function loadSong()
 {
-  //alert("Playing " + filesong);
   if( playlistIndex >=0  && playlistIndex < playlist.length )
   {
     var filesong = playlist[playlistIndex];
     var PISplayer = document.getElementById("PlayItSam");
-    log.innerHTML += "Loading " + filesong + "<br/>";
+    log.innerHTML += "<br/>#" + playlistIndex + " " + filesong + "<br/>";
     PISplayer.src=filesong;
     PISplayer.load();
   }
