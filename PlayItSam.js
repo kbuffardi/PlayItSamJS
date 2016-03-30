@@ -2,6 +2,7 @@
 var playlist;
 var playlistIndex;
 var playRandom;
+var log;
 
 //initialize event handlers on window load
 window.onload = function () 
@@ -9,14 +10,17 @@ window.onload = function ()
   //initialize global vars
   playlist = [];
   playlistIndex = -1;
-  playRandom = false;
+  playRandom = true;
+  log = document.getElementById('PISlog');
 
   //Check the support for the File API support 
   if (window.File && window.FileReader && window.FileList && window.Blob) 
   {
+    
+
     var fileSelected = document.getElementById('txtFileToRead');
     fileSelected.addEventListener('change', function (e) 
-    { 
+    {
       loadPlaylist( fileSelected.files[0] );
     }, false);
 
@@ -24,43 +28,46 @@ window.onload = function ()
     chkbxRandom.addEventListener('change', function (e) 
     { 
       playRandom = chkbxRandom.checked;
-      loadPlaylist( fileSelected.files[0] );
     }, false);
 
     var PISplayer = document.getElementById("PlayItSam");
     PISplayer.addEventListener("ended", function (e)
     {
+      log.innerHTML += "...ENDED";
       skip();
-      playSong();
+      loadSong();
+    }, false);
+
+    PISplayer.addEventListener("canplay", function (e)
+    {
+      PISplayer.play();
     }, false);
 
     PISplayer.addEventListener("abort", function (e)
     {
+      log.innerHTML += "...ABORTED";
       skip();
-      playSong();
+      loadSong();
     }, false);
 
     PISplayer.addEventListener("error", function (e)
     {
+      log.innerHTML += "...ERROR";
       skip();
-      playSong();
+      loadSong();
     }, false);
 
     PISplayer.addEventListener("stalled", function (e)
     {
+      log.innerHTML += "...STALLED";
       skip();
-      playSong();
+      loadSong();
     }, false);
 
-    PISplayer.addEventListener("suspend", function (e)
-    {
-      skip();
-      playSong();
-    }, false);
   } 
   else 
   {  
-    alert("Files are not supported in your browser"); 
+    log.innerHTML += "<br/>Files are not supported in your browser"; 
   } 
 }
 
@@ -69,6 +76,7 @@ window.onload = function ()
 function skip()
 {
   playlistIndex = playlistIndex % playlist.length +1; // go to next song when song ends
+  log.innerHTML += "<br/>#" + playlistIndex;
 }
 
 //randomly shuffle the playlist
@@ -99,26 +107,26 @@ function loadPlaylist(file)
         playlist.push( songname );
       }
     }
-    playRandom ? randomizePlaylist();
+    log.innerHTML += "<br/>Loaded " + playlist.length + " songs: ";
+    if(playRandom)
+      randomizePlaylist();
+    log.innerHTML += "<br/>" + playlist.toString();
     playlistIndex = 0;
-    playSong();
+    loadSong();
   } 
   fileReader.readAsText(file);
 }
 
-//load song from filename into PlayItSam player
-function loadAndPlaySong(filesong)
+//load song from playlist into PlayItSam player
+function loadSong()
 {
   //alert("Playing " + filesong);
-  var PISplayer = document.getElementById("PlayItSam");
-  PISplayer.src=filesong;
-  PISplayer.load();
-  PISplayer.play();
-}
-
-//safely play the current song
-function playSong()
-{
   if( playlistIndex >=0  && playlistIndex < playlist.length )
-  loadAndPlaySong(playlist[playlistIndex]);  
+  {
+    var filesong = playlist[playlistIndex];
+    var PISplayer = document.getElementById("PlayItSam");
+    log.innerHTML += "Loading " + filesong + "<br/>";
+    PISplayer.src=filesong;
+    PISplayer.load();
+  }
 }

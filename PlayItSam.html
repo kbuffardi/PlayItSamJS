@@ -1,18 +1,20 @@
 <!DOCTYPE html>
 <html>
 <title>Random Playlist</title>
+<script src="PlayItSam.js"></script>
 <body>
   <p>
    <input type="checkbox" id="randomize" checked>Randomize imported list</input>
   </p>
-  <p>
+
   	Load m3u Playlist: 
   	<input type="file" id="txtFileToRead" />
-  </p>
+
   <audio id="PlayItSam" autoplay="true">
     <source id="audioSource" src="" type="audio/mpeg">
     Your browser does not support the audio element.
   </audio>
+  <div id="PISlog"></div>
 
 </body>
 </html>
