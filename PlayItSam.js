@@ -82,7 +82,7 @@ function skip()
 function randomizePlaylist()
 {
   var numsongs = playlist.length;
-  for(var i = 0; i < numsongs; i++ )
+  for(var i = 0; i < numsongs*10; i++ )
   {
     var num = Math.floor((Math.random() * playlist.length));
     playlist.push( playlist.splice(num,1) ); //remove random item and move it to the end
