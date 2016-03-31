@@ -109,7 +109,7 @@ function loadPlaylist(file)
     log.innerHTML += "<br/>Loaded " + playlist.length + " songs. ";
     if(playRandom)
       randomizePlaylist();
-    playlistIndex = 0;
+    skip();
     loadSong();
   } 
   fileReader.readAsText(file);
